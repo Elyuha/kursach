@@ -31,9 +31,13 @@ int main()
 	int c = 0;
 	long int len;
 	system("CLS");
-	BASE = fopen("base.bin", "rb");
+	BASE = fopen("base.bin", "a+b");
 	if (BASE == NULL)
+	{
+		printf("РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р»");
+		system("pause");
 		return 1;
+	}
 	fseek(BASE, 0, SEEK_END);
 	len = ftell(BASE);
 	count = len / 65;
@@ -49,6 +53,8 @@ int main()
 	{
 		system("CLS");
 
+		printf("  в„–|РђРІС‚РѕСЂ               |РќР°Р·РІР°РЅРёРµ                      |Р–Р°РЅСЂ\n\n");
+
 		for (int i = 0; i < count; i++)
 		{
 			printf("%3d|", i + 1);
@@ -56,15 +62,15 @@ int main()
 			printf("%-30s|", (RecordLibrary+i)->name);
 			printf("%s \n", (RecordLibrary+i)->gerne);
 		}
-		printf("\nВыберите дальнейшее действие: \n");
-		printf("1) Пополнить базу новой композицией \n");
-		printf("2) Отредактировать базу \n");
-		printf("3) Удалить композицию из базы \n");
-		printf("4) Сортировать базу по автору \n");
-		printf("5) Сортировать базу по названию композиции  \n");
-		printf("6) Сортировать базу по жанру \n");
-		printf("7) Поиск композиции\n");
-		printf("8) Отмена \n");
+		printf("\nР’С‹Р±РµСЂРёС‚Рµ РґР°Р»СЊРЅРµР№С€РµРµ РґРµР№СЃС‚РІРёРµ: \n");
+		printf("1) РџРѕРїРѕР»РЅРёС‚СЊ Р±Р°Р·Сѓ РЅРѕРІРѕР№ РєРѕРјРїРѕР·РёС†РёРµР№ \n");
+		printf("2) РћС‚СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р±Р°Р·Сѓ \n");
+		printf("3) РЈРґР°Р»РёС‚СЊ РєРѕРјРїРѕР·РёС†РёСЋ РёР· Р±Р°Р·С‹ \n");
+		printf("4) РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ Р±Р°Р·Сѓ РїРѕ Р°РІС‚РѕСЂСѓ \n");
+		printf("5) РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ Р±Р°Р·Сѓ РїРѕ РЅР°Р·РІР°РЅРёСЋ РєРѕРјРїРѕР·РёС†РёРё  \n");
+		printf("6) РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ Р±Р°Р·Сѓ РїРѕ Р¶Р°РЅСЂСѓ \n");
+		printf("7) РџРѕРёСЃРє РєРѕРјРїРѕР·РёС†РёРё\n");
+		printf("8) РћС‚РјРµРЅР° \n");
 		scanf("%d", &c);
 		switch (c)
 		{
@@ -125,12 +131,12 @@ int replenishment()
 	system("CLS");
 	count++;
 	RecordLibrary = (struct base*)realloc(RecordLibrary, sizeof(struct base) * (count));
-	printf("Введите автора композиции:   ");
+	printf("Р’РІРµРґРёС‚Рµ Р°РІС‚РѕСЂР° РєРѕРјРїРѕР·РёС†РёРё:   ");
 	getchar();
 	gets((RecordLibrary + (count - 1))->author);
-	printf("Введите название композиции:   ");
+	printf("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РєРѕРјРїРѕР·РёС†РёРё:   ");
 	gets((RecordLibrary + (count - 1))->name);
-	printf("Введите жанр композиции:   ");
+	printf("Р’РІРµРґРёС‚Рµ Р¶Р°РЅСЂ РєРѕРјРїРѕР·РёС†РёРё:   ");
 	gets((RecordLibrary + (count - 1))->gerne);
 	return 0;
 }
@@ -149,8 +155,8 @@ int editing()
 		printf("%s \n", (RecordLibrary + i)->gerne);
 	}
 
-	printf("\n0 - Отмена \n");
-	printf("Введите номер строки, которую хотите изменить - ");
+	printf("\n0 - РћС‚РјРµРЅР° \n");
+	printf("Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ СЃС‚СЂРѕРєРё, РєРѕС‚РѕСЂСѓСЋ С…РѕС‚РёС‚Рµ РёР·РјРµРЅРёС‚СЊ - ");
 	scanf("%d", &k);
 	if (k == 0)
 	{
@@ -159,11 +165,11 @@ int editing()
 
 	num = k - 1;
 
-	printf("Автор - %s\nНазвание - %s\nЖанр - %s\n", (RecordLibrary + num)->author, (RecordLibrary + num)->name, (RecordLibrary + num)->gerne);
-	printf("Какой элемент вы хотите изменить :\n");
-	printf("1) Автора\n");
-	printf("2) Название\n");
-	printf("3) Жанр\n");
+	printf("РђРІС‚РѕСЂ - %s\nРќР°Р·РІР°РЅРёРµ - %s\nР–Р°РЅСЂ - %s\n", (RecordLibrary + num)->author, (RecordLibrary + num)->name, (RecordLibrary + num)->gerne);
+	printf("РљР°РєРѕР№ СЌР»РµРјРµРЅС‚ РІС‹ С…РѕС‚РёС‚Рµ РёР·РјРµРЅРёС‚СЊ :\n");
+	printf("1) РђРІС‚РѕСЂР°\n");
+	printf("2) РќР°Р·РІР°РЅРёРµ\n");
+	printf("3) Р–Р°РЅСЂ\n");
 	scanf("%d", &k);
 
 	system("CLS");
@@ -173,8 +179,8 @@ int editing()
 	case 1:
 	{
 		getchar();
-		printf("Нынешнее имя автора - %s\n", (RecordLibrary + num)->author);
-		printf("Введите новое имя автора - ");
+		printf("РќС‹РЅРµС€РЅРµРµ РёРјСЏ Р°РІС‚РѕСЂР° - %s\n", (RecordLibrary + num)->author);
+		printf("Р’РІРµРґРёС‚Рµ РЅРѕРІРѕРµ РёРјСЏ Р°РІС‚РѕСЂР° - ");
 		memset((RecordLibrary + num)->author, 0, sizeof((RecordLibrary + num)->author));
 		gets((RecordLibrary + num)->author);
 		break;
@@ -182,8 +188,8 @@ int editing()
 	case 2:
 	{
 		getchar();
-		printf("Нынешнее название %s\n", (RecordLibrary + num)->name);
-		printf("Введите новое название - ");
+		printf("РќС‹РЅРµС€РЅРµРµ РЅР°Р·РІР°РЅРёРµ %s\n", (RecordLibrary + num)->name);
+		printf("Р’РІРµРґРёС‚Рµ РЅРѕРІРѕРµ РЅР°Р·РІР°РЅРёРµ - ");
 		memset((RecordLibrary + num)->name, 0, sizeof((RecordLibrary + num)->name));
 		gets((RecordLibrary + num)->name);
 		break;
@@ -191,15 +197,15 @@ int editing()
 	case 3:
 	{
 		getchar();
-		printf("Нынешний жанр  %s\n", (RecordLibrary + num)->gerne);
-		printf("Введите новый жанр - ");
+		printf("РќС‹РЅРµС€РЅРёР№ Р¶Р°РЅСЂ  %s\n", (RecordLibrary + num)->gerne);
+		printf("Р’РІРµРґРёС‚Рµ РЅРѕРІС‹Р№ Р¶Р°РЅСЂ - ");
 		memset((RecordLibrary + num)->gerne, 0, sizeof((RecordLibrary + num)->gerne));
 		gets((RecordLibrary + num)->gerne);
 		break;
 	}
 	}
 
-	printf("Хотите продолжить редактирование? \n 1) Да \n 2) Нет \n");
+	printf("РҐРѕС‚РёС‚Рµ РїСЂРѕРґРѕР»Р¶РёС‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ? \n 1) Р”Р° \n 2) РќРµС‚ \n");
 	scanf("%d", &num);
 	if (num == 1)
 	{
@@ -227,7 +233,7 @@ int deleting()
 	}
 
 
-	printf("Введите номер строки, которую хотите удалить - ");
+	printf("Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ СЃС‚СЂРѕРєРё, РєРѕС‚РѕСЂСѓСЋ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ - ");
 	scanf("%d", &k);
 	while (k - 1 < count)
 	{
@@ -245,9 +251,9 @@ int sortAuthor()
 {
 
 	char line1[20], line2[20];
-	struct base *str = (struct base*)malloc(sizeof(struct base) + 1); // для свапа структур 
+	struct base *str = (struct base*)malloc(sizeof(struct base) + 1); // РґР»СЏ СЃРІР°РїР° СЃС‚СЂСѓРєС‚СѓСЂ 
 
-	for (int i = 0; i < count; i++) //для нормальной сортировки без учёта регистра 
+	for (int i = 0; i < count; i++) //РґР»СЏ РЅРѕСЂРјР°Р»СЊРЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРё Р±РµР· СѓС‡С‘С‚Р° СЂРµРіРёСЃС‚СЂР° 
 	{
 		for (int k = 0; k < count - 1; k++)
 		{
@@ -384,7 +390,7 @@ int search()
 	char array[63];
 	////////////////////////////////////////////////////////////////////////////////
 
-	printf("Введите ключевые слова: ");
+	printf("Р’РІРµРґРёС‚Рµ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°: ");
 	getchar();
 	gets(array);
 	while (array[cnt] != '\0')
