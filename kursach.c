@@ -28,7 +28,7 @@ int main()
 {
 	setlocale(LC_ALL, "RUS");
 	FILE *BASE;
-	int c = 0;
+	char c = '0';
 	long int len;
 	system("CLS");
 	BASE = fopen("base.bin", "a+b");
@@ -49,8 +49,9 @@ int main()
 	{
 		fread(RecordLibrary + i, sizeof(struct base), 1, BASE);
 	}
-	while (c != 8)
+	while (c != '8')
 	{
+		c = '0';
 		system("CLS");
 
 		printf("  №|Автор               |Название                      |Жанр\n\n");
@@ -71,68 +72,78 @@ int main()
 		printf("6) Сортировать базу по жанру \n");
 		printf("7) Поиск композиции\n");
 		printf("8) Отмена \n");
-		scanf("%d", &c);
+	m:;
+		scanf("%c", &c);
 		switch (c)
 		{
-		case 1:
+		case '1':
 		{
 			replenishment();
 			break;
 		}
-		case 2:
+		case '2':
 		{
 			editing();
 			break;
 		}
-		case 3:
+		case '3':
 		{
 			deleting();
 			break;
 		}
-		case 4:
+		case '4':
 		{
 			sortAuthor();
 			break;
 		}
-		case 5:
+		case '5':
 		{
 			sortName();
 			break;
 		}
-		case 6:
+		case '6':
 		{
 			sortGerne();
 			break;
 		}
-		case 7:
+		case '7':
 		{
 			search();
 			break;
 		}
+		case '8':
+		{
+			fclose(BASE);
+			BASE = fopen("base.bin", "wb");
+			if (BASE == NULL)
+				return 1;
+			for (int i = 0; i < count; i++)
+			{
+				fwrite((RecordLibrary + i)->author, 1, sizeof((RecordLibrary + i)->author), BASE);
+				fwrite((RecordLibrary + i)->name, 1, sizeof((RecordLibrary + i)->name), BASE);
+				fwrite((RecordLibrary + i)->gerne, 1, sizeof((RecordLibrary + i)->gerne), BASE);
+			}
+
+			fclose(BASE);
+			return 0;
+		}
+		default:
+		{
+			printf("Введите корректный номер операции\n");
+			goto m;
+		}
 		}
 		system("CLS");
 	}
-	fclose(BASE);
-	BASE = fopen("base.bin", "wb");
-	if (BASE == NULL)
-		return 1;
-	for (int i = 0; i < count; i++)
-	{
-		fwrite((RecordLibrary + i)->author, 1, sizeof((RecordLibrary + i)->author), BASE);
-		fwrite((RecordLibrary + i)->name, 1, sizeof((RecordLibrary + i)->name), BASE);
-		fwrite((RecordLibrary + i)->gerne, 1, sizeof((RecordLibrary + i)->gerne), BASE);
-	}
-
-	fclose(BASE);
 }
 //*****************************************
 int replenishment()
 {
 	system("CLS");
+	while (getchar() != '\n');
 	count++;
 	RecordLibrary = (struct base*)realloc(RecordLibrary, sizeof(struct base) * (count));
 	printf("Введите автора композиции:   ");
-	getchar();
 	gets((RecordLibrary + (count - 1))->author);
 	printf("Введите название композиции:   ");
 	gets((RecordLibrary + (count - 1))->name);
@@ -145,8 +156,17 @@ int editing()
 {
 	int j = 0;
 	int k, num;
+	
 
 	system("CLS");
+	if (count == 0)
+	{
+		printf("В базе нет данных.\nВыберите другую операцию.\n");
+		system("pause");
+		while (getchar() != '\n');
+		return 0;
+	}
+
 	for (int i = 0; i < count; i++)
 	{
 		printf("%3d|", i + 1);
@@ -170,9 +190,9 @@ int editing()
 	printf("1) Автора\n");
 	printf("2) Название\n");
 	printf("3) Жанр\n");
+k:;
 	scanf("%d", &k);
 
-	system("CLS");
 
 	switch (k)
 	{
@@ -203,6 +223,11 @@ int editing()
 		gets((RecordLibrary + num)->gerne);
 		break;
 	}
+	default:
+	{
+		printf("Некорректная операця\nВведите номер элемента, который хотите заменить\n");
+		goto k;
+	}
 	}
 
 	printf("Хотите продолжить редактирование? \n 1) Да \n 2) Нет \n");
@@ -223,6 +248,13 @@ int deleting()
 
 	system("CLS");
 
+	if (count == 0)
+	{
+		printf("В базе нет данных.\nВыберите другую операцию.\n");
+		system("pause");
+		while (getchar() != '\n');
+		return 0;
+	}
 
 	for (int i = 0; i < count; i++)
 	{
@@ -231,7 +263,6 @@ int deleting()
 		printf("%-30s|", (RecordLibrary + i)->name);
 		printf("%s \n", (RecordLibrary + i)->gerne);
 	}
-
 
 	printf("Введите номер строки, которую хотите удалить - ");
 	scanf("%d", &k);
@@ -249,6 +280,14 @@ int deleting()
 //*****************************************
 int sortAuthor()
 {
+	system("CLS");
+	if (count == 0)
+	{
+		printf("В базе нет данных.\nВыберите другую операцию.\n");
+		system("pause");
+		while (getchar() != '\n');
+		return 0;
+	}
 
 	char line1[20], line2[20];
 	struct base *str = (struct base*)malloc(sizeof(struct base) + 1); // для свапа структур 
@@ -293,6 +332,14 @@ int sortAuthor()
 //*****************************************
 int sortName()
 {
+	system("CLS");
+	if (count == 0)
+	{
+		printf("В базе нет данных.\nВыберите другую операцию.\n");
+		system("pause");
+		while (getchar() != '\n');
+		return 0;
+	}
 
 	char line1[30], line2[30];
 	struct base *str = (struct base*)malloc(sizeof(struct base) + 1); 
@@ -338,6 +385,15 @@ int sortName()
 //*****************************************
 int sortGerne()
 {
+	system("CLS");
+	if (count == 0)
+	{
+		printf("В базе нет данных.\nВыберите другую операцию.\n");
+		system("pause");
+		while (getchar() != '\n');
+		return 0;
+	}
+
 	char line1[15], line2[15];
 	struct base *str = (struct base*)malloc(sizeof(struct base) + 1);
 
@@ -381,6 +437,15 @@ int sortGerne()
 //*****************************************
 int search()
 {
+	system("CLS");
+	if (count == 0)
+	{
+		printf("В базе нет данных.\nВыберите другую операцию.\n");
+		system("pause");
+		while (getchar() != '\n');
+		return 0;
+	}
+
 	int i, k = 0, j = 0, cnt = 0;
 	int flag = 0;
 	char *input1 = (char*)malloc(sizeof(char) * 1);
@@ -391,18 +456,15 @@ int search()
 	////////////////////////////////////////////////////////////////////////////////
 
 	printf("Введите ключевые слова: ");
-	getchar();
 	gets(array);
 	while (array[cnt] != '\0')
 	{
 		if (array[cnt] >= 'A' && array[cnt] <= 'Z')
-		{
 			array[cnt] += 'a' - 'A';
-		}
 		cnt++;
 	}
 	cnt = 0;
-	while (array[cnt] >= 'a' && array[cnt] <= 'z')
+	while ((array[cnt] >= 'a' && array[cnt] <= 'z') || (array[cnt] >= '0' && array[cnt] <= '9'))
 	{
 		input1 = (char*)realloc(input1, sizeof(char) * (j + 1));
 		*(input1 + j) = array[cnt];
@@ -416,7 +478,7 @@ int search()
 		goto next;
 	cnt++;
 
-	while (array[cnt] >= 'a' && array[cnt] <= 'z')
+	while ((array[cnt] >= 'a' && array[cnt] <= 'z') || (array[cnt] >= '0' && array[cnt] <= '9'))
 	{
 		input2 = (char*)realloc(input2, sizeof(char) * (j + 1));
 		*(input2 + j) = array[cnt];
@@ -424,12 +486,10 @@ int search()
 		j++;
 	}
 	j = 0;
-
 	if (array[cnt] == '\n')
 		goto next;
 	cnt++;
-
-	while (array[cnt] >= 'a' && array[cnt] <= 'z')
+	while ((array[cnt] >= 'a' && array[cnt] <= 'z') || (array[cnt] >= '0' && array[cnt] <= '9'))
 	{
 		input3 = (char*)realloc(input3, sizeof(char) * (j + 1));
 		*(input3 + j) = array[cnt];
@@ -444,10 +504,13 @@ next:;
 		j = 0;
 		while ((RecordLibrary + i)->author[j] != '\0')
 		{
-			if ((RecordLibrary + i)->author[j] >= 'A' && (RecordLibrary + i)->author[j] <= 'Z')
-				(mass + i)->author[j] = (RecordLibrary + i)->author[j] + 'a' - 'A';
-			else
-				(mass + i)->author[j] = (RecordLibrary + i)->author[j];
+			if (((RecordLibrary + i)->author[j] >= 'A' && (RecordLibrary + i)->author[j] <= 'Z') || ((RecordLibrary + i)->author[j] >= 'a' && (RecordLibrary + i)->author[j] <= 'z') || ((RecordLibrary + i)->author[j] >= '0' && (RecordLibrary + i)->author[j] <= '9'))
+			{
+				if ((RecordLibrary + i)->author[j] >= 'A' && (RecordLibrary + i)->author[j] <= 'Z')
+					(mass + i)->author[j] = (RecordLibrary + i)->author[j] + 'a' - 'A';
+				else
+					(mass + i)->author[j] = (RecordLibrary + i)->author[j];
+			}
 			k++;
 			j++;
 		}
@@ -456,10 +519,13 @@ next:;
 
 		while ((RecordLibrary + i)->name[j] != '\0')
 		{
-			if ((RecordLibrary + i)->name[j] >= 'A' && (RecordLibrary + i)->name[j] <= 'Z')
-				(mass + i)->name[j] = (RecordLibrary + i)->name[j] + 'a' - 'A';
-			else
-				(mass + i)->name[j] = (RecordLibrary + i)->name[j];
+			if (((RecordLibrary + i)->name[j] >= 'A' && (RecordLibrary + i)->name[j] <= 'Z') || ((RecordLibrary + i)->name[j] >= 'a' && (RecordLibrary + i)->name[j] <= 'z') || ((RecordLibrary + i)->name[j] >= '0' && (RecordLibrary + i)->name[j] <= '9'))
+			{
+				if ((RecordLibrary + i)->name[j] >= 'A' && (RecordLibrary + i)->name[j] <= 'Z')
+					(mass + i)->name[j] = (RecordLibrary + i)->name[j] + 'a' - 'A';
+				else
+					(mass + i)->name[j] = (RecordLibrary + i)->name[j];
+			}
 			k++;
 			j++;
 		}
@@ -468,11 +534,13 @@ next:;
 
 		while ((RecordLibrary + i)->gerne[j] != '\0')
 		{
-
-			if ((RecordLibrary + i)->gerne[j] >= 'A' && (RecordLibrary + i)->gerne[j] <= 'Z')
-				(mass + i)->gerne[j] = (RecordLibrary + i)->gerne[j] + 'a' - 'A';
-			else
-				(mass + i)->gerne[j] = (RecordLibrary + i)->gerne[j];
+			if (((RecordLibrary + i)->gerne[j] >= 'A' && (RecordLibrary + i)->gerne[j] <= 'Z') || ((RecordLibrary + i)->gerne[j] >= 'a' && (RecordLibrary + i)->gerne[j] <= 'z') || ((RecordLibrary + i)->gerne[j] >= '0' && (RecordLibrary + i)->gerne[j] <= '9'))
+			{
+				if ((RecordLibrary + i)->gerne[j] >= 'A' && (RecordLibrary + i)->gerne[j] <= 'Z')
+					(mass + i)->gerne[j] = (RecordLibrary + i)->gerne[j] + 'a' - 'A';
+				else
+					(mass + i)->gerne[j] = (RecordLibrary + i)->gerne[j];
+			}
 			k++;
 			j++;
 		}
