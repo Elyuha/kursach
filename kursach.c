@@ -8,9 +8,9 @@
 
 struct base
 {
-	char author[20];
-	char name[30];
-	char gerne[15];
+	char author[21];
+	char name[31];
+	char gerne[16];
 }*RecordLibrary;
 
 long count;
@@ -40,7 +40,7 @@ int main()
 	}
 	fseek(BASE, 0, SEEK_END);
 	len = ftell(BASE);
-	count = len / 65;
+	count = len / 68;
 	RecordLibrary = (struct base*)malloc(sizeof(struct base) * count);
 
 	fseek(BASE, 0, SEEK_SET);
@@ -71,7 +71,7 @@ int main()
 		printf("5) Сортировать базу по названию композиции  \n");
 		printf("6) Сортировать базу по жанру \n");
 		printf("7) Поиск композиции\n");
-		printf("8) Заверший работу \n");
+		printf("8) Завершить работу \n");
 	m:;
 		scanf("%c", &c);
 		switch (c)
@@ -149,6 +149,7 @@ int replenishment()
 	gets((RecordLibrary + (count - 1))->name);
 	printf("Введите жанр композиции:   ");
 	gets((RecordLibrary + (count - 1))->gerne);
+	while (getchar() != '\n');
 	return 0;
 }
 //*****************************************
@@ -180,6 +181,7 @@ int editing()
 	scanf("%d", &k);
 	if (k == 0)
 	{
+		while (getchar() != '\n');
 		return 0;
 	}
 
@@ -274,7 +276,7 @@ int deleting()
 
 	count--;
 	RecordLibrary = (struct base*)realloc(RecordLibrary, sizeof(struct base) * count);
-
+	while (getchar() != '\n');
 	return 0;
 }
 //*****************************************
@@ -327,6 +329,7 @@ int sortAuthor()
 		}
 	}
 	free(str);
+	while (getchar() != '\n');
 	return 0;
 }
 //*****************************************
@@ -380,6 +383,7 @@ int sortName()
 		}
 	}
 	free(str);
+	while (getchar() != '\n');
 	return 0;
 }
 //*****************************************
@@ -432,17 +436,18 @@ int sortGerne()
 		}
 	}
 	free(str);
+	while (getchar() != '\n');
 	return 0;
 }
 //*****************************************
 int search()
 {
 	system("CLS");
+	while (getchar() != '\n');
 	if (count == 0)
 	{
 		printf("В базе нет данных.\nВыберите другую операцию.\n");
 		system("pause");
-		while (getchar() != '\n');
 		return 0;
 	}
 
